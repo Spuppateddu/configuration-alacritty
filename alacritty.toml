@@ -1,0 +1,29 @@
+[general]
+# Colours and opacity come from this generated file (~/.i3rc/scripts/theme.sh,
+# $mod+Shift+t). Define no [colors.*] or opacity here — this file would win.
+import = ["~/.cache/alacritty-theme.toml"]
+
+[font]
+# Courier Prime only, no fallback family: anything outside its coverage (icons,
+# powerline, U+23F8/U+23F5) is tofu. Upstream TTFs, not apt's broken package.
+normal = { family = "Courier Prime", style = "Regular" }
+bold = { family = "Courier Prime", style = "Bold" }
+italic = { family = "Courier Prime", style = "Italic" }
+bold_italic = { family = "Courier Prime", style = "Bold Italic" }
+# 0.600em advance. At 96 DPI the cell is 7px for sizes in [8.125, 9.375), 8px at
+# 9.5. Raising this widens the cell and invalidates ~/.i3rc/eww/scripts/screen.sh.
+size = 9.5
+
+# Squashes the cell 7px → 6px: 159 columns half-screen instead of 136. At -1 the
+# wide glyphs (m w M W) touch; 0 costs 23 columns, -2 is mush. Box drawing unaffected.
+[font.offset]
+x = -1
+
+[window]
+# No `opacity` here — the imported theme owns it (see [general]).
+decorations = "none"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
