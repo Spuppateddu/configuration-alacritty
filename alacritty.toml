@@ -21,7 +21,7 @@ x = -1
 
 [window]
 # No `opacity` here — the imported theme owns it (see [general]).
-decorations = "none"
+# decorations = "none"
 
 [[keyboard.bindings]]
 key = "Return"
