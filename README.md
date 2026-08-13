@@ -15,7 +15,7 @@ ln -sfn ~/linux-configuration/alacritty ~/.alacritty
 cd ~/.alacritty && ./install.sh      # --dry-run to see what it would do first
 ```
 
-That installs `alacritty`, `fontconfig`, [Courier Prime](#font), and links
+That installs `alacritty`, `fontconfig`, [Cascadia Code](#font), and links
 `alacritty.toml` into `~/.config/alacritty/`. It is idempotent, so re-run it
 after a `git pull`.
 
@@ -45,21 +45,22 @@ ln -sfn ~/.alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 
 ## Font
 
-**Courier Prime**, with no fallback family behind it. Courier Prime carries no
+**Cascadia Code**, with no fallback family behind it. Cascadia Code carries no
 icon range, so every codepoint outside its coverage renders as a tofu box:
 powerline separators, git glyphs, Material Design icons, and U+23F8/U+23F5 (the
 pause/play pair Claude Code uses as its mode indicator). Deliberate — restoring
 any of them means adding a second family.
 
 Install it from [upstream's own
-TTFs](https://github.com/quoteunquoteapps/CourierPrime), **not apt's
-`fonts-courier-prime`** — that package reports `style=Light`, `weight=50`,
-`slant=0` on all four faces, so bold and italic silently resolve to Regular.
-`./install.sh` does this for you.
+release](https://github.com/microsoft/cascadia-code/releases), taking the four
+**static** TTFs (`ttf/static/CascadiaCode-{Regular,Bold,Italic,BoldItalic}.ttf`)
+— **not** the variable `ttf/CascadiaCode.ttf`, which reports neither
+`style=Bold` nor `style=Italic`, so the four `[font]` lines would all land on
+Regular. `./install.sh` does this for you.
 
 ```sh
-fc-list : family | grep -qx 'Courier Prime' && echo "font installed"
-fc-match "Courier Prime"                     # want Courier Prime, not a substitute
+fc-list : family | grep -qx 'Cascadia Code' && echo "font installed"
+fc-match "Cascadia Code"                     # want Cascadia Code, not a substitute
 ```
 
 If the font is on disk but unlisted, the cache is stale — `fc-cache -rf`.

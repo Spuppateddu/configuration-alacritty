@@ -4,14 +4,15 @@
 import = ["~/.cache/alacritty-theme.toml"]
 
 [font]
-# Courier Prime only, no fallback family: anything outside its coverage (icons,
-# powerline, U+23F8/U+23F5) is tofu. Upstream TTFs, not apt's broken package.
-normal = { family = "Courier Prime", style = "Regular" }
-bold = { family = "Courier Prime", style = "Bold" }
-italic = { family = "Courier Prime", style = "Italic" }
-bold_italic = { family = "Courier Prime", style = "Bold Italic" }
-# 0.600em advance. At 96 DPI the cell is 7px for sizes in [8.125, 9.375), 8px at
-# 9.5. Raising this widens the cell and invalidates ~/.i3rc/eww/scripts/screen.sh.
+# Cascadia Code only, no fallback family: anything outside its coverage (icons,
+# powerline, U+23F8/U+23F5) is tofu. Upstream's static TTFs — the variable build
+# reports no style=Bold/Italic, so the four lines below would all land on Regular.
+normal = { family = "Cascadia Code", style = "Regular" }
+bold = { family = "Cascadia Code", style = "Bold" }
+italic = { family = "Cascadia Code", style = "Italic" }
+bold_italic = { family = "Cascadia Code", style = "Bold Italic" }
+# 0.586em advance. At 96 DPI the cell is 7px for sizes in [8.32, 9.6), 8px from
+# 9.6. Raising this widens the cell and invalidates ~/.i3rc/eww/scripts/screen.sh.
 size = 9.5
 
 # Squashes the cell 7px → 6px: 159 columns half-screen instead of 136. At -1 the

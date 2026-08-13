@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs Alacritty + Courier Prime and links alacritty.toml into
+# Installs Alacritty + Cascadia Code and links alacritty.toml into
 # ~/.config/alacritty/ (the path Alacritty actually reads). Idempotent.
 # Usage: ./install.sh [--dry-run]     (also honours DRY_RUN=true from the env)
 set -euo pipefail
@@ -90,43 +90,39 @@ title "Alacritty"
 apt_ensure alacritty fontconfig curl unzip
 
 # ── Font ─────────────────────────────────────────────────────────────────────
-# Courier Prime is the only family alacritty.toml names; nothing sits behind it,
+# Cascadia Code is the only family alacritty.toml names; nothing sits behind it,
 # so anything outside its coverage (icons, powerline, U+23F8/U+23F5) is tofu.
 FONT_DIR="$HOME/.local/share/fonts"
 FONTS_CHANGED=false
 
-# NOT apt's fonts-courier-prime: it labels all four faces style=Light/weight=50,
-# so bold and italic silently resolve to Regular. Upstream has no releases, hence
-# the branch zip; the four ttf are copied out by name to keep sources/OTF/WOFF out.
-if compgen -G "$FONT_DIR/CourierPrime*" >/dev/null 2>&1 \
-   || fc-list : family 2>/dev/null | grep -qx "Courier Prime"; then
-    skip "Courier Prime already installed."
+# The four statics, NOT the variable ttf/CascadiaCode.ttf: only the statics report
+# style=Bold/Italic, which is how alacritty.toml asks for them. The release asset
+# carries its version in the filename, so there is no "latest" URL — hence the pin.
+CASCADIA_VERSION="2407.24"
+if compgen -G "$FONT_DIR/CascadiaCode-*" >/dev/null 2>&1 \
+   || fc-list : family 2>/dev/null | grep -qx "Cascadia Code"; then
+    skip "Cascadia Code already installed."
 elif ! has_cmd curl || ! has_cmd unzip; then
-    warn "curl/unzip missing — skipped Courier Prime; the terminal will fall back to another face."
+    warn "curl/unzip missing — skipped Cascadia Code; the terminal will fall back to another face."
 else
-    url="https://github.com/quoteunquoteapps/CourierPrime/archive/refs/heads/master.zip"
+    url="https://github.com/microsoft/cascadia-code/releases/download/v$CASCADIA_VERSION/CascadiaCode-$CASCADIA_VERSION.zip"
     tmp="$(mktemp --suffix=.zip)"
-    tmpdir="$(mktemp -d)"
-    step "Installing Courier Prime (the terminal font)"
+    step "Installing Cascadia Code $CASCADIA_VERSION (the terminal font)"
     run mkdir -p "$FONT_DIR"
     # Tested, not run bare: offline would otherwise abort before the config links.
+    # -j flattens ttf/static/ away; naming the four keeps the NF and PL builds out.
     if run curl -fL --progress-bar -o "$tmp" "$url" \
-       && run unzip -oq "$tmp" -d "$tmpdir" \
-       && compgen -G "$tmpdir/CourierPrime-*/fonts/ttf/CourierPrime-*.ttf" >/dev/null 2>&1; then
-        run cp -f "$tmpdir"/CourierPrime-*/fonts/ttf/CourierPrime-*.ttf "$FONT_DIR/"
+       && run unzip -oqj "$tmp" \
+              'ttf/static/CascadiaCode-Regular.ttf' 'ttf/static/CascadiaCode-Bold.ttf' \
+              'ttf/static/CascadiaCode-Italic.ttf' 'ttf/static/CascadiaCode-BoldItalic.ttf' \
+              -d "$FONT_DIR"; then
         FONTS_CHANGED=true
-        ok "Courier Prime installed."
+        ok "Cascadia Code installed."
     else
-        warn "Could not install Courier Prime — the terminal will fall back to another face until a later run."
+        warn "Could not install Cascadia Code — the terminal will fall back to another face until a later run."
     fi
-    # Not via run(): mktemp created these for real even under --dry-run.
-    rm -rf "$tmp" "$tmpdir"
-fi
-
-# Both packages claim the same family name, so bold stops resolving predictably.
-if has_cmd dpkg && dpkg -s fonts-courier-prime >/dev/null 2>&1; then
-    warn "apt's fonts-courier-prime is installed and its faces are mislabelled (style=Light on all four)."
-    warn "Remove it so bold resolves predictably:  sudo apt-get purge fonts-courier-prime"
+    # Not via run(): mktemp created this for real even under --dry-run.
+    rm -f "$tmp"
 fi
 
 # ── Wiring ───────────────────────────────────────────────────────────────────
@@ -155,11 +151,11 @@ if [[ "$DRY_RUN" == true ]]; then
 elif ! has_cmd fc-match; then
     warn "fc-match not available — skipped font verification."
 else
-    got="$(fc-match "Courier Prime" 2>/dev/null || true)"
-    if [[ "$got" == *'"Courier Prime"'* ]]; then
-        ok "text → Courier Prime"
+    got="$(fc-match "Cascadia Code" 2>/dev/null || true)"
+    if [[ "$got" == *'"Cascadia Code"'* ]]; then
+        ok "text → Cascadia Code"
     else
-        warn "text → ${got:-nothing} (expected Courier Prime — fontconfig substituted)"
+        warn "text → ${got:-nothing} (expected Cascadia Code — fontconfig substituted)"
     fi
 fi
 
