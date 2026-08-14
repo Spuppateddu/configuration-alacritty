@@ -1,7 +1,13 @@
 [general]
 # Colours and opacity come from this generated file (~/.i3rc/scripts/theme.sh,
 # $mod+Shift+t). Define no [colors.*] or opacity here — this file would win.
-import = ["~/.cache/alacritty-theme.toml"]
+# size.toml is the font size, and size.local.toml this machine's override of it
+# (git-ignored, written by best-linux-environment). A missing import is skipped.
+import = [
+    "~/.cache/alacritty-theme.toml",
+    "~/.alacritty/size.toml",
+    "~/.alacritty/size.local.toml",
+]
 
 [font]
 # Cascadia Code only, no fallback family: anything outside its coverage (icons,
@@ -11,9 +17,8 @@ normal = { family = "Cascadia Code", style = "Regular" }
 bold = { family = "Cascadia Code", style = "Bold" }
 italic = { family = "Cascadia Code", style = "Italic" }
 bold_italic = { family = "Cascadia Code", style = "Bold Italic" }
-# 0.586em advance. At 96 DPI the cell is 7px for sizes in [8.32, 9.6), 8px from
-# 9.6. Raising this widens the cell and invalidates ~/.i3rc/eww/scripts/screen.sh.
-size = 9.5
+# No `size` here: the importing file wins in Alacritty, so it would beat both
+# imports above. It lives in size.toml — see there.
 
 # Squashes the cell 7px → 6px: 159 columns half-screen instead of 136. At -1 the
 # wide glyphs (m w M W) touch; 0 costs 23 columns, -2 is mush. Box drawing unaffected.

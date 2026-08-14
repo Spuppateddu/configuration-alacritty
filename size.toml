@@ -1,0 +1,10 @@
+# The font size, imported by alacritty.toml. Its own [font] table cannot hold it:
+# the importing file wins, so a size there would beat every override.
+
+# Per machine, override it in ~/.alacritty/size.local.toml — git-ignored, and
+# written from best-linux-environment's fonts.local (BLE_SIZE_TERMINAL).
+
+[font]
+# 0.586em advance. At 96 DPI the cell is 7px for sizes in [8.32, 9.6), 8px from
+# 9.6. Raising this widens the cell and invalidates ~/.i3rc/eww/scripts/screen.sh.
+size = 9.5
