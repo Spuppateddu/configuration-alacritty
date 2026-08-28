@@ -2,6 +2,10 @@
 # The size every machine starts from is size.toml, which IS committed.
 size.local.toml
 
+# This machine's rolled cursor colour, written by best-linux-environment's
+# settings.local. Per-machine by design — nothing here is shared.
+colors.local.toml
+
 # OS / editor junk
 .DS_Store
 *.swp

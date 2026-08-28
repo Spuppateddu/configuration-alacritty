@@ -3,10 +3,15 @@
 # $mod+Shift+t). Define no [colors.*] or opacity here — this file would win.
 # size.toml is the font size, and size.local.toml this machine's override of it
 # (git-ignored, written by best-linux-environment). A missing import is skipped.
+#
+# colors.local.toml is last on purpose: best-linux-environment writes this
+# machine's rolled cursor colour there, and the later import wins, so the theme
+# toggle above keeps owning dark/light without taking the cursor with it.
 import = [
     "~/.cache/alacritty-theme.toml",
     "~/.alacritty/size.toml",
     "~/.alacritty/size.local.toml",
+    "~/.alacritty/colors.local.toml",
 ]
 
 [font]
@@ -28,6 +33,8 @@ x = -1
 [window]
 # No `opacity` here — the imported theme owns it (see [general]).
 # decorations = "none"
+
+opacity = 1
 
 [[keyboard.bindings]]
 key = "Return"

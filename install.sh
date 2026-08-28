@@ -99,8 +99,12 @@ FONTS_CHANGED=false
 # style=Bold/Italic, which is how alacritty.toml asks for them. The release asset
 # carries its version in the filename, so there is no "latest" URL — hence the pin.
 CASCADIA_VERSION="2407.24"
+# Process substitution, never `fc-list | grep -q`: grep quits at the first match,
+# fc-list dies on the closed pipe (141), and `set -o pipefail` reports the whole
+# pipeline as failed — so an installed font reads as missing and the zip is
+# downloaded again on every single run. Fed through <() the status is grep's alone.
 if compgen -G "$FONT_DIR/CascadiaCode-*" >/dev/null 2>&1 \
-   || fc-list : family 2>/dev/null | grep -qx "Cascadia Code"; then
+   || grep -qx "Cascadia Code" < <(fc-list : family 2>/dev/null); then
     skip "Cascadia Code already installed."
 elif ! has_cmd curl || ! has_cmd unzip; then
     warn "curl/unzip missing — skipped Cascadia Code; the terminal will fall back to another face."
