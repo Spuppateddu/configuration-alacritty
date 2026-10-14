@@ -12,6 +12,8 @@ import = [
     "~/.alacritty/size.toml",
     "~/.alacritty/size.local.toml",
     "~/.alacritty/colors.local.toml",
+    # Last, so it beats the theme: best-linux-environment's BLE_TERMINAL_OPACITY.
+    "~/.alacritty/opacity.local.toml",
 ]
 
 [font]
@@ -31,10 +33,8 @@ bold_italic = { family = "Cascadia Code", style = "Bold Italic" }
 x = -1
 
 [window]
-# No `opacity` here — the imported theme owns it (see [general]).
+# No `opacity` here — the theme owns it, unless opacity.local.toml says otherwise.
 # decorations = "none"
-
-opacity = 1
 
 [[keyboard.bindings]]
 key = "Return"
