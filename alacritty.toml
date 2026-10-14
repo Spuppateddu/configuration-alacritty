@@ -17,13 +17,13 @@ import = [
 ]
 
 [font]
-# Cascadia Code only, no fallback family: anything outside its coverage (icons,
-# powerline, U+23F8/U+23F5) is tofu. Upstream's static TTFs — the variable build
-# reports no style=Bold/Italic, so the four lines below would all land on Regular.
-normal = { family = "Cascadia Code", style = "Regular" }
-bold = { family = "Cascadia Code", style = "Bold" }
-italic = { family = "Cascadia Code", style = "Italic" }
-bold_italic = { family = "Cascadia Code", style = "Bold Italic" }
+# Cascadia Code NF only, no fallback family — the NF build carries the icon and
+# powerline ranges itself. Upstream's static TTFs: the variable build reports no
+# style=Bold/Italic, so the four lines below would all land on Regular.
+normal = { family = "Cascadia Code NF", style = "Regular" }
+bold = { family = "Cascadia Code NF", style = "Bold" }
+italic = { family = "Cascadia Code NF", style = "Italic" }
+bold_italic = { family = "Cascadia Code NF", style = "Bold Italic" }
 # No `size` here: the importing file wins in Alacritty, so it would beat both
 # imports above. It lives in size.toml — see there.
 

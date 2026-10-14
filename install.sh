@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs Alacritty + Cascadia Code and links alacritty.toml into
+# Installs Alacritty + Cascadia Code NF and links alacritty.toml into
 # ~/.config/alacritty/ (the path Alacritty actually reads). Idempotent.
 # Usage: ./install.sh [--dry-run]     (also honours DRY_RUN=true from the env)
 set -euo pipefail
@@ -90,12 +90,12 @@ title "Alacritty"
 apt_ensure alacritty fontconfig curl unzip
 
 # ── Font ─────────────────────────────────────────────────────────────────────
-# Cascadia Code is the only family alacritty.toml names; nothing sits behind it,
-# so anything outside its coverage (icons, powerline, U+23F8/U+23F5) is tofu.
+# Cascadia Code NF is the only family alacritty.toml names, and nothing sits
+# behind it. NF = Microsoft's Nerd-Font build: same face, plus the icon range.
 FONT_DIR="$HOME/.local/share/fonts"
 FONTS_CHANGED=false
 
-# The four statics, NOT the variable ttf/CascadiaCode.ttf: only the statics report
+# The four statics, NOT the variable ttf/CascadiaCodeNF.ttf: only the statics report
 # style=Bold/Italic, which is how alacritty.toml asks for them. The release asset
 # carries its version in the filename, so there is no "latest" URL — hence the pin.
 CASCADIA_VERSION="2407.24"
@@ -103,27 +103,27 @@ CASCADIA_VERSION="2407.24"
 # fc-list dies on the closed pipe (141), and `set -o pipefail` reports the whole
 # pipeline as failed — so an installed font reads as missing and the zip is
 # downloaded again on every single run. Fed through <() the status is grep's alone.
-if compgen -G "$FONT_DIR/CascadiaCode-*" >/dev/null 2>&1 \
-   || grep -qx "Cascadia Code" < <(fc-list : family 2>/dev/null); then
-    skip "Cascadia Code already installed."
+if compgen -G "$FONT_DIR/CascadiaCodeNF-*" >/dev/null 2>&1 \
+   || grep -qx "Cascadia Code NF" < <(fc-list : family 2>/dev/null); then
+    skip "Cascadia Code NF already installed."
 elif ! has_cmd curl || ! has_cmd unzip; then
-    warn "curl/unzip missing — skipped Cascadia Code; the terminal will fall back to another face."
+    warn "curl/unzip missing — skipped Cascadia Code NF; the terminal will fall back to another face."
 else
     url="https://github.com/microsoft/cascadia-code/releases/download/v$CASCADIA_VERSION/CascadiaCode-$CASCADIA_VERSION.zip"
     tmp="$(mktemp --suffix=.zip)"
-    step "Installing Cascadia Code $CASCADIA_VERSION (the terminal font)"
+    step "Installing Cascadia Code NF $CASCADIA_VERSION (the terminal font)"
     run mkdir -p "$FONT_DIR"
     # Tested, not run bare: offline would otherwise abort before the config links.
-    # -j flattens ttf/static/ away; naming the four keeps the NF and PL builds out.
+    # -j flattens ttf/static/ away; naming the four keeps the plain and PL builds out.
     if run curl -fL --progress-bar -o "$tmp" "$url" \
        && run unzip -oqj "$tmp" \
-              'ttf/static/CascadiaCode-Regular.ttf' 'ttf/static/CascadiaCode-Bold.ttf' \
-              'ttf/static/CascadiaCode-Italic.ttf' 'ttf/static/CascadiaCode-BoldItalic.ttf' \
+              'ttf/static/CascadiaCodeNF-Regular.ttf' 'ttf/static/CascadiaCodeNF-Bold.ttf' \
+              'ttf/static/CascadiaCodeNF-Italic.ttf' 'ttf/static/CascadiaCodeNF-BoldItalic.ttf' \
               -d "$FONT_DIR"; then
         FONTS_CHANGED=true
-        ok "Cascadia Code installed."
+        ok "Cascadia Code NF installed."
     else
-        warn "Could not install Cascadia Code — the terminal will fall back to another face until a later run."
+        warn "Could not install Cascadia Code NF — the terminal will fall back to another face until a later run."
     fi
     # Not via run(): mktemp created this for real even under --dry-run.
     rm -f "$tmp"
@@ -155,11 +155,11 @@ if [[ "$DRY_RUN" == true ]]; then
 elif ! has_cmd fc-match; then
     warn "fc-match not available — skipped font verification."
 else
-    got="$(fc-match "Cascadia Code" 2>/dev/null || true)"
-    if [[ "$got" == *'"Cascadia Code"'* ]]; then
-        ok "text → Cascadia Code"
+    got="$(fc-match "Cascadia Code NF" 2>/dev/null || true)"
+    if [[ "$got" == *'"Cascadia Code NF"'* ]]; then
+        ok "text → Cascadia Code NF"
     else
-        warn "text → ${got:-nothing} (expected Cascadia Code — fontconfig substituted)"
+        warn "text → ${got:-nothing} (expected Cascadia Code NF — fontconfig substituted)"
     fi
 fi
 
