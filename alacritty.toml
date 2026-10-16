@@ -32,6 +32,12 @@ bold_italic = { family = "Cascadia Code NF", style = "Bold Italic" }
 [font.offset]
 x = -1
 
+# Every terminal opens in tmux's 'default' session (~/.tmuxrc/scripts/default_session.sh);
+# without that script it is the plain login shell. `alacritty -e CMD` skips both.
+[terminal.shell]
+program = "/bin/sh"
+args = ["-c", 'f="$HOME/.tmuxrc/scripts/default_session.sh"; [ -x "$f" ] && exec "$f"; exec "${SHELL:-/bin/sh}"']
+
 [window]
 # No `opacity` here — the theme owns it, unless opacity.local.toml says otherwise.
 # decorations = "none"
