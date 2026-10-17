@@ -32,11 +32,13 @@ bold_italic = { family = "Cascadia Code NF", style = "Bold Italic" }
 [font.offset]
 x = -1
 
-# Every terminal opens in tmux's 'default' session (~/.tmuxrc/scripts/default_session.sh);
+# Every terminal opens in tmux's main session, named after the PC (~/.tmuxrc/scripts/default_session.sh);
 # without that script it is the plain login shell. `alacritty -e CMD` skips both.
+# Alacritty sets $SHELL to `program` (/bin/sh), and tmux would open every pane in it:
+# put the login shell from passwd back first.
 [terminal.shell]
 program = "/bin/sh"
-args = ["-c", 'f="$HOME/.tmuxrc/scripts/default_session.sh"; [ -x "$f" ] && exec "$f"; exec "${SHELL:-/bin/sh}"']
+args = ["-c", 's="$(getent passwd "$(id -un)" | cut -d: -f7)"; [ -x "$s" ] && export SHELL="$s"; f="$HOME/.tmuxrc/scripts/default_session.sh"; [ -x "$f" ] && exec "$f"; exec "${SHELL:-/bin/sh}"']
 
 [window]
 # No `opacity` here — the theme owns it, unless opacity.local.toml says otherwise.
